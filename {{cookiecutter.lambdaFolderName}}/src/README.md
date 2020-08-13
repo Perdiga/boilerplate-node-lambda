@@ -1,15 +1,15 @@
-# b
+# {{cookiecutter.lambdaName}}
 
-My Description
+{{cookiecutter.lambdaDescription}}
 
 ## Stack
 
-- AWSSAM  -> An End-to-End Deployment Tool for Quickly Building Serverless Apps. 
+- AWSSAM  -> An End-to-End Deployment Tool for Quickly Building Serverless Apps.
 Develop, locally test and debug, and deploy your serverless applications using SAM CLI
   - https://aws.amazon.com/pt/serverless/sam/
 - Jest    -> Library responsible for unit tests.
   - https://jestjs.io/
-- esLint  -> Javascript source code analysis tool that help find programming errors, bugs, 
+- esLint  -> Javascript source code analysis tool that help find programming errors, bugs,
 stylistic errors and suspicious constructions.
   - https://eslint.org/
 
