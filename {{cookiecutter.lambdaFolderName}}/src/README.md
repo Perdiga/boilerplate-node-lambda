@@ -1,11 +1,17 @@
-# {{cookiecutter.lambdaName}}
+# b
 
-{{cookiecutter.lambdaDescription}}
+My Description
 
 ## Stack
 
-- AWSSAM ->
-- Jest ->  
+- AWSSAM  -> An End-to-End Deployment Tool for Quickly Building Serverless Apps. 
+Develop, locally test and debug, and deploy your serverless applications using SAM CLI
+  - https://aws.amazon.com/pt/serverless/sam/
+- Jest    -> Library responsible for unit tests.
+  - https://jestjs.io/
+- esLint  -> Javascript source code analysis tool that help find programming errors, bugs, 
+stylistic errors and suspicious constructions.
+  - https://eslint.org/
 
 ## Project structure
 
@@ -23,26 +29,63 @@
 
 ## How to run locally
 
-1 - Install AWSSAM
-2 - Run `npm run run`
+### Using AWS SAM
+
+1. Install AWSSAM
+2. Run `npm run sam:start`  
+
+### Using node
+
+ 1. Update the event variable on `utils/debug.js`
+ 2. Run `npm run start`
 
 ## How to debug
 
-1 - Install AWSSAM
-2 - Run `npm run run:debug`
-3 - Call your api endpoint
-4 - Click on VSCode Debugger to attach the debugger
+### Using AWS SAM
+
+This simulates an API Gateway request
+
+Slower; Faster to change the event;
+
+1. Install AWSSAM
+2. Run `npm run sam:debug`
+3. Call your api endpoint
+4. Click on VSCode Debugger and select `Attach to SAM CLI`
+
+### Using node
+
+This simulates more like when you open the aws console and test a lambda using an event
+
+Faster; Slower to change the event;
+
+ 1. Update the event variable on `utils/debug.js`
+ 2. Click on VSCode Debbugger and select `Start and Debug`
+
+### Debug tests
+
+This is very helpful when you are stuck trying to understand why the test is not passing
+
+1. Click on VSCode Debbugger and select `Debug Tests`
 
 ## How to ensure quality
 
 ### Tests
 
-1 - Run `npm run test`
-or 
-1 - Run `npm run test:silent`
+1. Run `npm run test`
+or
+1. Run `npm run test:silent`
 
 ### Lint
 
-1 - Run `npm run lint`
+1. Run `npm run lint`
 
 ## How to deploy
+
+### Manually to AWS
+
+1. Run `npm run package`
+2. Upload the zip file under `dist\lambda` to the AWS lambda
+3. Ensure that the lambda handler is configured to `handlers/awsHandler.handler`
+
+### Using AWS SAM
+

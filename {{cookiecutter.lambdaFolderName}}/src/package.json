@@ -6,9 +6,14 @@
   "scripts": {
     "test": "jest",
     "test:silent": "jest --silent",
-    "run": "sam.cmd local start-api --template ../template.yaml",
-    "run:debug": "sam.cmd local start-api -d 5858 --template ../template.yaml",
-    "lint": "eslint --config=.eslintrc.json '**/*.js'"
+    "start": "node ./utils/debug.js",
+    "lint": "eslint --config=.eslintrc.json '**/*.js'",
+    "sam:start": "sam.cmd local start-api --template ../template.yaml",
+    "sam:debug": "sam.cmd local start-api -d 5858 --template ../template.yaml",
+    "package:prepare": "rm -rf ../dist && mkdir ../dist",
+    "package:install": "rm -rf node_modules && npm install --production",
+    "package:compress": "lambda-zip .packLambda.config ../dist/lambda.zip -a -v",
+    "package": "npm run package:prepare && npm run package:compress"
   },
   "devDependencies": {
     "jest": "^26.4.0",
@@ -17,6 +22,7 @@
     "eslint-plugin-import": "^2.18.2"
   },
   "dependencies": {
-    "dynamodb-doc": "^1.0.0"
+    "dynamodb-doc": "^1.0.0",
+    "lambda-zip": "^0.3.2"
   }
 }

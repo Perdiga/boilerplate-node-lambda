@@ -26,7 +26,7 @@ module.exports = {
   resetMocks: false,
 
   collectCoverage: true,
-  collectCoverageFrom: ['**/*.js', '!**/jest.config.js'],
+  collectCoverageFrom: ['**/*.js', '!**/jest.config.js', '!**/debug.js'],
   coverageDirectory: './coverage/cov',
   coverageReporters: ['lcov', 'text'],
   coverageThreshold: {
