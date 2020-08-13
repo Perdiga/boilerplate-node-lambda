@@ -38,7 +38,11 @@
 ### Tests
 
 1 - Run `npm run test`
+or 
+1 - Run `npm run test:silent`
 
 ### Lint
+
+1 - Run `npm run lint`
 
 ## How to deploy

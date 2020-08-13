@@ -4,7 +4,7 @@
         {
             "name": "Attach to SAM CLI",
             "type": "node",
-            "request": "attach",
+            "request": "launch",
             "address": "localhost",
             "port": 5858,
             "localRoot": "${workspaceRoot}/src",

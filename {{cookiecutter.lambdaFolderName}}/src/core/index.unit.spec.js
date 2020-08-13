@@ -1,86 +1,81 @@
-const { expect } = require('chai');
-const sinon = require('sinon');
-const doc = require('dynamodb-doc');
+const index = require('./index');
 
-const deps = {
-    // Use sinon.stub(..) to prevent any calls to DynamoDB and
-    // enable faking of methods
-    dynamo: sinon.stub(new doc.DynamoDB()),
+// Factory a system under test
+const makeSut = () => {
+  const deps = {
+    useCases: {
+      getUseCase: () => () => 'success',
+      postUseCase: () => () => 'success',
+    },
+  };
+
+  const event = {
+    httpMethod: 'GET',
+    queryStringParameters: {
+      TableName: 'MyTable',
+    },
+    body: '{}',
+  };
+
+  // SUT= System Under Test
+  const sut = index(deps);
+  return { sut, deps, event };
 };
 
-const myIndex = require('./index')(deps);
+describe('index', () => {
+  it('Should call getUseCase in case of HTTP GET and return the result', async () => {
+    // Arange
+    const { sut, event } = makeSut();
 
-// (Optional) Keep test output free of
-// error messages printed by our lambda function
-sinon.stub(console, 'error');
+    // Act
+    const { headers, statusCode, body } = await sut(event);
 
-describe('handler', () => {
-    // Reset test doubles for isolating individual test cases
-    afterEach(sinon.reset);
+    // Assert
+    expect(headers['Content-Type']).toBe('application/json');
+    expect(statusCode).toBe('200');
+    expect(body).toBe('"success"');
+  });
 
-    it('should call dynamo db scan(...) in case of HTTP GET and return the result', async () => {
-        const event = {
-            httpMethod: 'GET',
-            queryStringParameters: {
-                TableName: 'MyTable',
-            },
-            body: '{}',
-        };
-        // Fake DynamoDB client behavior
-        deps.dynamo.scan.returns({ promise: sinon.fake.resolves('some content') });
+  it('Should call postUseCase in case of HTTP POST and return the result', async () => {
+    // Arange
+    const { sut, event } = makeSut();
+    event.httpMethod = 'POST';
 
-        const { headers, statusCode, body } = await myIndex(event);
+    // Act
+    const { headers, statusCode, body } = await sut(event);
 
-        sinon.assert.calledWith(deps.dynamo.scan, { TableName: 'MyTable' });
-        expect(headers['Content-Type']).to.equal('application/json');
-        expect(statusCode).to.equal('200');
-        expect(body).to.equal('"some content"');
-    });
+    // Assert
+    expect(headers['Content-Type']).toBe('application/json');
+    expect(statusCode).toBe('204');
+    expect(JSON.parse(body)).toBe('success');
+  });
 
-    it('should return an error message if a dynamo db call fails', async () => {
-        const event = {
-            httpMethod: 'GET',
-            queryStringParameters: {},
-            body: '{}',
-        };
-        deps.dynamo.scan.returns({ promise: sinon.fake.rejects(new Error('fail')) });
+  it('should reject unsupported HTTP methods', async () => {
+    // Arange
+    const { sut, event } = makeSut();
+    event.httpMethod = 'DELETE';
 
-        const { headers, statusCode, body } = await myIndex(event);
+    // Act
+    const { headers, statusCode, body } = await sut(event);
 
-        sinon.assert.called(console.error);
-        expect(headers['Content-Type']).to.equal('application/json');
-        expect(statusCode).to.equal('400');
-        expect(JSON.parse(body).message).to.equal('fail');
-    });
+    // Assert
+    expect(headers['Content-Type']).toBe('application/json');
+    expect(headers.Allow).toBe('GET, POST');
+    expect(statusCode).toBe('405');
+    expect(JSON.parse(body).message).toBe('Unsupported method: DELETE');
+  });
 
-    it('should call dynamo db putItem(...) in case of HTTP POST', async () => {
-        const event = {
-            httpMethod: 'POST',
-            queryStringParameters: {},
-            body: '{}',
-        };
-        deps.dynamo.putItem.returns({ promise: sinon.fake.resolves('success') });
+  it('should reject if any use case throw an error', async () => {
+    // Arange
+    const { sut, deps, event } = makeSut();
+    deps.useCases.getUseCase = () => () => { throw Error('Any Error'); };
 
-        const { headers, statusCode, body } = await myIndex(event);
+    // Act
+    const { headers, statusCode, body } = await sut(event);
 
-        sinon.assert.calledWith(deps.dynamo.putItem, {});
-        expect(headers['Content-Type']).to.equal('application/json');
-        expect(statusCode).to.equal('204');
-        expect(JSON.parse(body)).to.equal('success');
-    });
-
-    it('should reject unsupported HTTP methods', async () => {
-        const event = {
-            httpMethod: 'DELETE',
-            queryStringParameters: {},
-            body: '{}',
-        };
-
-        const { headers, statusCode, body } = await myIndex(event);
-
-        expect(headers['Content-Type']).to.equal('application/json');
-        expect(headers['Allow']).to.equal('GET, POST');
-        expect(statusCode).to.equal('405');
-        expect(JSON.parse(body).message).to.equal('Unsupported method: DELETE');
-    });
+    // Assert
+    expect(headers['Content-Type']).toBe('application/json');
+    expect(statusCode).toBe('400');
+    expect(JSON.parse(body).message).toBe('Any Error');
+  });
 });
