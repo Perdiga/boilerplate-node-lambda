@@ -1,0 +1,19 @@
+{
+  "name": "{{cookiecutter.packageLambdaName}}",
+  "version": "1.0.0",
+  "description": "{{cookiecutter.lambdaDescription}}",
+  "author": "{{cookiecutter.companyNameTitle}}",
+  "scripts": {
+    "test": "mocha './{,!(node_modules)/**}/*.spec.js'",
+    "run": "sam.cmd local start-api --template ../template.yaml",
+    "run:debug": "sam.cmd local start-api -d 5858 --template ../template.yaml"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "sinon": "^7.2.2"
+  },
+  "dependencies": {
+    "dynamodb-doc": "^1.0.0"
+  }
+}

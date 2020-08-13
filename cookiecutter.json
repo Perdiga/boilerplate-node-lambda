@@ -3,8 +3,8 @@
     "projectName": "My Project",
     "lambdaName": "My Lambda",
     "lambdaDescription": "My Description",
-    "lambdaFolderName": "{{ cookiecutter.companyName.title().replace(' ', '') }}_{{ cookiecutter.lambdaName.title().replace(' ', '') }}_Lambda",
-    "_companyNameTitle": "{{ cookiecutter.companyName.title() }}",
-    "_projectNameTitle": "{{ cookiecutter.projectName.title() }}",
-    "_lambdaName": "{{ cookiecutter.projectName.lower().replace(' ', '_') }}"
+    "lambdaFolderName": "{{ cookiecutter.companyName|title|replace(' ', '') }}_{{ cookiecutter.lambdaName|title|replace(' ', '') }}_Lambda",
+    "companyNameTitle": "{{ cookiecutter.companyName|title }}",
+    "projectNameTitle": "{{ cookiecutter.projectName|title }}",
+    "packageLambdaName": "{{ cookiecutter.projectName|lower|replace(' ', '_') }}"
 }

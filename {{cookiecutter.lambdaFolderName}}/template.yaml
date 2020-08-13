@@ -1,29 +1,23 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Company - {{cookiecutter._companyNameTitle}}; Project - {{cookiecutter._projectNameTitle}} - Lambda - {{cookiecutter.lambdaName}}
+Description: >
+  Company - {{ cookiecutter.companyNameTitle }}
+  Project - {{ cookiecutter.projectNameTitle }} 
+  Lambda - {{cookiecutter.lambdaName}}
+  Description - {{cookiecutter.lambdaDescription}}
+
 Globals:
   Function:
     Timeout: 3
-    Handler: app.lambdaHandler
-    Runtime: nodejs8.10
-    Tracing: Active
-    Layers:
-      - !FindInMap [RegionMap, !Ref "AWS::Region", layer]
-      
-Mappings: 
-  RegionMap: 
-    us-east-1:
-        layer: arn:aws:lambda:us-east-1:700336187521:layer:aws-sdk:6
-    us-west-2:
-        layer: arn:aws:lambda:us-west-2:700336187521:layer:aws-sdk:6
-    eu-central-1:
-        layer: arn:aws:lambda:eu-central-1:700336187521:layer:aws-sdk:2
+    
+    Runtime: nodejs12.x
 
 Resources:
   ServiceFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: service/
+      CodeUri: src/
+      Handler: handlers/awsHandler.handler
       Events:
         Service:
           Type: Api
