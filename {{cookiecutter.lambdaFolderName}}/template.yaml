@@ -8,8 +8,8 @@ Description: >
 
 Globals:
   Function:
-    Timeout: 3
-    
+    Timeout: 30    
+    MemorySize: 128
     Runtime: nodejs12.x
 
 Resources:
@@ -24,6 +24,11 @@ Resources:
           Properties:
             Path: /
             Method: get
+        Service:
+          Type: Api
+          Properties:
+            Path: /
+            Method: post
             
 
 Outputs:

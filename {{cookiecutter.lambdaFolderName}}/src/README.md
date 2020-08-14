@@ -89,3 +89,9 @@ or
 
 ### Using AWS SAM
 
+1. Install aws-cli
+2. Configure your aws-cli account
+3. run `sam build`
+4. run `sam deploy --guided`
+
+- To destoy what was deployed run `aws cloudformation delete-stack --stack-name sam-app`
